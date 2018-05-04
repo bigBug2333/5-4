@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      width: 350px;
+      /*height: 350px;*/
+      margin: 100px;
+      /*border: 1px solid #ccc;*/
+      position: relative;
+    }
+
+    .big {
+      width: 400px;
+      height: 400px;
+      position: absolute;
+      top: 0;
+      left: 360px;
+      /*border: 1px solid #ccc;*/
+      overflow: hidden;
+      display: none;
+    }
+
+    .mask {
+      width: 175px;
+      height: 175px;
+      background: rgba(255, 255, 0, 0.4);
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      cursor: move;
+      display: none;
+    }
+
+    .small {
+      position: relative;
+    }
+
+    .box img {
+      vertical-align: top;
+    }
+
+    #bigBox img {
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+<div class="box" id="box">
+  <div id="smallBox" class="small">
+    <img src="images/small.png" width="350" alt=""/>
+    <div id="mask" class="mask"></div>
+  </div>
+  <div id="bigBox" class="big">
+    <img src="images/big.jpg" width="800" alt=""/>
+  </div>
+</div>
+
+<script>
+    var box = document.querySelector(".box");
+    var smallBox = document.querySelector(".small");
+    var mask = document.querySelector(".mask");
+    var bigBox = document.querySelector(".big");
+    var bigImg = document.querySelector(".big img");
+
+    smallBox.onmouseover = function () {
+        mask.style.display = "block";
+        bigBox.style.display = "block";
+    }
+    smallBox.onmouseout = function () {
+        mask.style.display = "none";
+        bigBox.style.display = "none";
+    }
+
+    smallBox.onmousemove = function (e) {
+        var spaceX = e.clientX - box.offsetLeft;
+        var spaceY = e.clientY - box.offsetTop;
+        var x = spaceX - mask.offsetWidth/2;
+        var y = spaceY - mask.offsetHeight/2;
+        var w = smallBox.offsetWidth - mask.offsetWidth;
+        var z = smallBox.offsetHeight - mask.offsetHeight;
+        if (x < 0) {
+            x = 0;
+        }
+        if (y < 0) {
+            y = 0;
+        }
+        if (x > w) {
+            x = w;
+        }
+        if (y > z) {
+            y = z;
+        }
+        // mask当前移动的值 / mask能移动的总值 = 大图片当前移动的值 / 大图片能移动的总值。
+        mask.style.left = x + "px";
+        mask.style.top = y + "px";
+        bigImg.style.left = - x / w * (bigImg.offsetWidth - bigBox.offsetWidth) + "px";
+        bigImg.style.top = - y / z * (bigImg.offsetHeight - bigBox.offsetHeight) + "px";
+    }
+</script>
+
+</body>
+</html>
